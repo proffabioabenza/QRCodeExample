@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/fabio/AndroidStudioProjects/LojaRetrofit/app/src/main/res/drawable-v24/no_image.xml" value="0.1953125" />
+        <entry key="..\:/Users/fabio/AndroidStudioProjects/LojaRetrofit/app/src/main/res/drawable/circle.xml" value="0.1953125" />
+        <entry key="..\:/Users/fabio/AndroidStudioProjects/LojaRetrofit/app/src/main/res/layout/activity_lista_produtos.xml" value="0.2" />
+        <entry key="..\:/Users/fabio/AndroidStudioProjects/LojaRetrofit/app/src/main/res/layout/activity_lista_produtos_rv.xml" value="0.17916666666666667" />
+        <entry key="..\:/Users/fabio/AndroidStudioProjects/LojaRetrofit/app/src/main/res/layout/card_item.xml" value="0.264" />
+        <entry key="..\:/Users/fabio/AndroidStudioProjects/LojaRetrofit/app/src/main/res/layout/card_item_placeholder.xml" value="0.264" />
+        <entry key="..\:/Users/fabio/AndroidStudioProjects/LojaRetrofitQr/app/src/main/res/layout/activity_lista_produtos.xml" value="0.25" />
+        <entry key="..\:/Users/fabio/AndroidStudioProjects/LojaRetrofitQr/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/Users/fabio/AndroidStudioProjects/LojaRetrofitQr/app/src/main/res/layout/activity_qr_code.xml" value="0.24010416666666667" />
+        <entry key="..\:/Users/fabio/AndroidStudioProjects/LojaRetrofitQr/app/src/main/res/menu/menu.xml" value="0.24010416666666667" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
