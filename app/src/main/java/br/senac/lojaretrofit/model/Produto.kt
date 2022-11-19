@@ -1,5 +1,6 @@
 package br.senac.lojaretrofit.model
 
+/** Classe de modelo que representa um produto **/
 data class Produto(
 	val descProduto: String,
 	val qtdMinEstoque: Int,

@@ -20,6 +20,7 @@ import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
+import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.BarcodeFormat
 
 /** Atividade para leitura de QRCode (copiar para sua aplicação) **/
@@ -48,6 +49,7 @@ class QrCodeActivity : AppCompatActivity() {
         //Pergunta ao contexto do Android se a permissão de acesso a câmera ainda não foi concedida
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             //Caso não tenha a permissão, solicita a permissão de câmera ao usuário
+            //O requestCode fornecido aqui será usado em onRequestPermissionsResult
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 1)
         } else {
             //Se já tinha a permissão, configura a variável para indicar essa situação
@@ -77,43 +79,77 @@ class QrCodeActivity : AppCompatActivity() {
 
         //Callback chamado caso o leitor de QRCode consiga detectar um QRCode válidp
         leitorQr.decodeCallback = DecodeCallback {
+            //O parâmetro it contém o QRCode lido
+            //Cria um intent de resposta para devolver o QRCode a quem chamou
             val respIntent = Intent()
+            //Coloca o QRCode lido dentro do intent, num extra com nome qrcode
             respIntent.putExtra("qrcode", it.text)
+            //Configura o intent como o intent de resposta
             setResult(RESULT_OK, respIntent)
+            //Encerra a atividade de QRCode e retorna para a anterior
             finish()
         }
 
+        //Configura um callback que é disparado caso ocorra algum erro
         leitorQr.errorCallback = ErrorCallback {
-            Toast.makeText(this, "Não foi possível abrir a câmera", Toast.LENGTH_LONG).show()
+            //Mostra uma mensagem de erro caso não consiga abrir a câmera
+            Snackbar.make(binding.root, "Não foi possível abrir a câmera", Snackbar.LENGTH_LONG).show()
+            //Loga o erro no console
             Log.e("QrCodeActivity", "inicializarLeitorQrCode", it)
+            //Configura o resultado de resposta como cancelado
             setResult(RESULT_CANCELED)
+            //Encerra a atividade de QRCode e retorna para a anterior
             finish()
         }
 
+        //Inicializa o leitor de QRCode
         leitorQr.startPreview()
     }
 
-
+    /**
+     *  Callback executado quando o usuário responder ao diálogo de solicitação de permissão,
+     *  aberto quando solicitamos a permissão caso não tenha na função verificarPermissaoCamera
+     **/
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        //Necessário para correta configuração de permissões
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
+        //Verifica se a requisição de permissão feita foi a que fizemos em verificarPermissaoCamera
         if (requestCode == 1) {
+            //Verifica se a permissão foi concedida
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Se foi concedida, configuramos a variável que indica isso de acordo...
                 permissaoConcedida = true
+                //...e inicializamos o leitor de QRCodes
                 inicializarLeitorQrCode()
+            //Se a permissão não foi concedida, mas é possível tentar de novo...
             } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
+                //Solicita que o diálogo de permissões apareça de novo
+                //É preciso fazer isso pois uma aplicação Android não tem
+                //permissão de ficar importunando o usuário com solicitações
+                //de permissão para sempre, apenas algumas vezes
                 mostrarDialogoPermissaoCamera()
+            //Se a permissão não foi concedida e esgotaram-se as tentativas de questionamento
             } else {
+                //Configura a permissão como negada na variável indicativa
                 permissaoConcedida = false
-                Toast.makeText(this,
-                    "Sem permissão de uso da câmera não é possível ler QR Codes", Toast.LENGTH_LONG).show()
+                //Mostra um aviso sobre a falta de permissão do uso da câmera
+                Snackbar.make(binding.root,
+                    "Sem permissão de uso da câmera não é possível ler QR Codes. Habilite a permissão nas configurações da aplicação do Android", Snackbar.LENGTH_LONG).show()
+                //Configura o resultado da atividade como cancelado
                 setResult(RESULT_CANCELED)
+                //Encerra a atividade de QRCodes e retorna para a anterior
                 finish()
             }
         }
     }
 
+    /** Função utilizada para auxiliar a configuração das permissões pelo usuário caso ele tenha
+     *  negado a primeira vez. Chamada em onRequestPermissionsResult **/
     private fun mostrarDialogoPermissaoCamera() {
+        //Cria um diálogo informativo e configura sua interface
+        //O diálogo questonará se o usuário quer abrir as configurações para habilitar
+        //a permissão da câmera
         AlertDialog.Builder(this)
             .setTitle("Permição de câmera")
             .setMessage(
@@ -121,15 +157,18 @@ class QrCodeActivity : AppCompatActivity() {
             )
             .setCancelable(false)
             .setPositiveButton(
-                "Configurações") { dialogInterface, i ->
+                "Ir para configurações") { dialogInterface, i ->
+                //Cria um intent para abrir as configurações do Android e o inicia
                 val i = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 val uri = Uri.fromParts("package", packageName, null)
                 i.data = uri
                 startActivity(i)
+                //Encerra a atividade do QRCode e retorna resultado como cancelado
                 setResult(RESULT_CANCELED)
                 finish()
             }
             .setNegativeButton("Cancelar", DialogInterface.OnClickListener { dialogInterface, i ->
+                //Encerra a atividade do QRCode e retorna resultado como cancelado
                 setResult(RESULT_CANCELED)
                 finish()
             })

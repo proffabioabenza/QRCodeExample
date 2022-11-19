@@ -10,6 +10,7 @@ import br.senac.lojaretrofit.R
 import br.senac.lojaretrofit.databinding.ActivityMainBinding
 import br.senac.lojaretrofit.model.Produto
 import br.senac.lojaretrofit.services.API
+import br.senac.lojaretrofit.services.UsuarioSingleton
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import retrofit2.*
@@ -26,6 +27,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         /** Coloca o layout carregado na tela **/
         setContentView(binding.root)
+
+        binding.root.setOnClickListener {
+            UsuarioSingleton.idUsuario = 1
+
+            if (UsuarioSingleton.idUsuario == null) {
+
+            }
+        }
     }
 
     /** Função de callback chamada quando o Android verifica se precisa carregar um menu **/
