@@ -12,7 +12,7 @@ class API(context: Context) {
         get() {
                      return Retrofit
                 .Builder()
-                .baseUrl("https://oficinacordova.azurewebsites.net/")
+                .baseUrl("http://oficinacordova.azurewebsites.net/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         }

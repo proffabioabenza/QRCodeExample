@@ -22,20 +22,44 @@ import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.google.zxing.BarcodeFormat
 
+/** Atividade para leitura de QRCode (copiar para sua aplicação) **/
 class QrCodeActivity : AppCompatActivity() {
+    /** Variável de bind automático **/
     lateinit var binding: ActivityQrCodeBinding
+    /** Variáve que armazena a instância do CodeScanner **/
     lateinit var leitorQr: CodeScanner
+    /**  Variável que armazena se a permissão de acesso a câmera foi ou não concedida **/
     var permissaoConcedida = false
 
+    /** Função de callback chamada quando a atividade é criada **/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        /** Infla o layout usando binding automático **/
         binding = ActivityQrCodeBinding.inflate(layoutInflater)
+        /** Coloca o layout carregado na tela **/
         setContentView(binding.root)
 
+        /** Chama a função para verificar e pedir permissão da câmera **/
         verificarPermissaoCamera()
     }
 
+    /** Função chamada para verificar se há permissão de acesso a câmera **/
+    private fun verificarPermissaoCamera() {
+        //Pergunta ao contexto do Android se a permissão de acesso a câmera ainda não foi concedida
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            //Caso não tenha a permissão, solicita a permissão de câmera ao usuário
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 1)
+        } else {
+            //Se já tinha a permissão, configura a variável para indicar essa situação
+            permissaoConcedida = true
+            //Chama a função que solicita a inicialização do leitor de QRCodes usando a câmera
+            inicializarLeitorQrCode()
+        }
+    }
+
+    /** Inicializa o leitor de QRCode **/
     private fun inicializarLeitorQrCode() {
+        //Obtém uma instância do leitor de QRCodes fornecendo a view do XML para exibição da câmera
         leitorQr = CodeScanner(this, binding.scannerView)
 
         //Define qual câmera usar, frontal ou traseira
@@ -51,35 +75,24 @@ class QrCodeActivity : AppCompatActivity() {
         //Desabilita o flash ao ligar o scanner
         leitorQr.isFlashEnabled = false
 
+        //Callback chamado caso o leitor de QRCode consiga detectar um QRCode válidp
         leitorQr.decodeCallback = DecodeCallback {
-            runOnUiThread {
-                val respIntent = Intent()
-                respIntent.putExtra("qrcode", it.text)
-                setResult(RESULT_OK, respIntent)
-                finish()
-            }
+            val respIntent = Intent()
+            respIntent.putExtra("qrcode", it.text)
+            setResult(RESULT_OK, respIntent)
+            finish()
         }
 
         leitorQr.errorCallback = ErrorCallback {
-            runOnUiThread {
-                Toast.makeText(this, "Não foi possível abrir a câmera", Toast.LENGTH_LONG).show()
-                Log.e("QrCodeActivity", "inicializarLeitorQrCode", it)
-                setResult(RESULT_CANCELED)
-                finish()
-            }
+            Toast.makeText(this, "Não foi possível abrir a câmera", Toast.LENGTH_LONG).show()
+            Log.e("QrCodeActivity", "inicializarLeitorQrCode", it)
+            setResult(RESULT_CANCELED)
+            finish()
         }
 
         leitorQr.startPreview()
     }
 
-    private fun verificarPermissaoCamera() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 1)
-        } else {
-            permissaoConcedida = true
-            inicializarLeitorQrCode()
-        }
-    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
