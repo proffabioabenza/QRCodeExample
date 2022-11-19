@@ -122,14 +122,13 @@ class QrCodeActivity : AppCompatActivity() {
                 permissaoConcedida = true
                 //...e inicializamos o leitor de QRCodes
                 inicializarLeitorQrCode()
-            //Se a permissão não foi concedida, mas é possível tentar de novo...
+            //Se a permissão não foi concedida e o usuário pediu para não perguntar mais...
             } else if (!shouldShowRequestPermissionRationale(permissions[0])) {
-                //Solicita que o diálogo de permissões apareça de novo
-                //É preciso fazer isso pois uma aplicação Android não tem
-                //permissão de ficar importunando o usuário com solicitações
-                //de permissão para sempre, apenas algumas vezes
+                //...chamamos uma função para mostrar um alerta e avisá-lo que ele
+                //precisa ir até configurações para ativar a permissão manualmente,
+                //ou não será possível ler QRCodes
                 mostrarDialogoPermissaoCamera()
-            //Se a permissão não foi concedida e esgotaram-se as tentativas de questionamento
+            //Se nada mais der certo, cancela tudo
             } else {
                 //Configura a permissão como negada na variável indicativa
                 permissaoConcedida = false
