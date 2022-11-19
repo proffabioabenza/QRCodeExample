@@ -27,14 +27,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         /** Coloca o layout carregado na tela **/
         setContentView(binding.root)
-
-        binding.root.setOnClickListener {
-            UsuarioSingleton.idUsuario = 1
-
-            if (UsuarioSingleton.idUsuario == null) {
-
-            }
-        }
     }
 
     /** Função de callback chamada quando o Android verifica se precisa carregar um menu **/
@@ -120,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //Chama a API de obternção de produto mapeada na classe de serviço
-        API(this).produto.get(id).enqueue(callback)
+        API().produto.get(id).enqueue(callback)
     }
 
     //Função chamada para atualizar a tela com os dados do produto
