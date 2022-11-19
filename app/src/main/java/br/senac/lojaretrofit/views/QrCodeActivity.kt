@@ -144,7 +144,7 @@ class QrCodeActivity : AppCompatActivity() {
     }
 
     /** Função utilizada para auxiliar a configuração das permissões pelo usuário caso ele tenha
-     *  negado a primeira vez. Chamada em onRequestPermissionsResult **/
+     *  negado e pedido para não questionar mais. Chamada em onRequestPermissionsResult **/
     private fun mostrarDialogoPermissaoCamera() {
         //Cria um diálogo informativo e configura sua interface
         //O diálogo questonará se o usuário quer abrir as configurações para habilitar
